@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 interface TaskDao {
 
     //Get all words alphabetized
-    @Query("SELECT * FROM task_table ORDER BY date DESC, title DESC")
+    @Query("SELECT * FROM task_table ORDER BY date ASC, title ASC")
     fun getTimeSortedTasks(): Flow<List<Task>>
 
     //Get a single word with a given id

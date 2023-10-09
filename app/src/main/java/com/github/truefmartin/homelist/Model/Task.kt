@@ -5,7 +5,6 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.github.truefmartin.homelist.NewEditTaskActivity.RecurringState
 import java.time.LocalDateTime
-import java.util.Date
 
 @Entity(tableName = "task_table")
 class Task(
@@ -15,7 +14,7 @@ class Task(
     @ColumnInfo(name = "title") var title: String,
     @ColumnInfo(name = "body") var body: String,
     @ColumnInfo(name = "date") var date: LocalDateTime,
-    @ColumnInfo(name = "completed") var completed: Int,
+    @ColumnInfo(name = "completed") var completed: Boolean,
     @ColumnInfo(name = "repeated") val repeated: RecurringState
 )
 

@@ -14,4 +14,16 @@ class Converters {
     fun dateToTimestamp(time: LocalDateTime?): String? {
         return time?.toString()
     }
+
+    @TypeConverter
+    fun fromBoolean(intBool: Int): Boolean {
+        return intBool != 0
+    }
+    @TypeConverter
+    fun toBoolean(boolean: Boolean): Int {
+        return if (boolean)
+            1
+        else
+            0
+    }
 }

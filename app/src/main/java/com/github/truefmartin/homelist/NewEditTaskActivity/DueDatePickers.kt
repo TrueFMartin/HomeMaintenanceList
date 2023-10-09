@@ -44,7 +44,7 @@ class DatePickerFragment(private val onSelectFunction: (LocalDateTime) -> Unit) 
     }
 
     override fun onDateSet(view: DatePicker, year: Int, month: Int, day: Int) {
-        // Do something with the date the user picks.
+        // Use call back function to set the date for the task
         onSelectFunction(LocalDateTime.of(year, month + 1, day, 0, 0))
     }
 }

@@ -1,17 +1,21 @@
 <resources>
     <string name="app_name">HomeMaintenanceList</string>
-    <string name="hint_word">Task…</string>
+    <string name="hint_word">Task title…</string>
     <string name="button_save">Save</string>
     <string name="empty_not_saved">Task not saved because it is empty.</string>
     <string name="add_task">Add task</string>
     <string name="channel_name">TaskListNotificationChannel</string>
     <string name="channel_description">Default notification channel for HomeMaintenanceList Application</string>
     <string name="empty_task_text">Enter task here</string>
-    <string name="due">Due...</string>
-    <string name="default_body_text">Fill in body...</string>
+    <string name="string_due_date">Due date…</string>
+    <string name="string_due_time">Due time…</string>
+    <string name="default_body_text">Fill in body…</string>
     <string name="recurring_task_text">Is a recurring this task?</string>
+    <string name="string_is_completed">Is this task already completed?</string>
+    <string name="string_recurrence">Recurrence:</string>
 
     <string-array name="recurring_options">
+        <item>None</item>
         <item>Daily</item>
         <item>Weekly</item>
         <item>Monthly</item>

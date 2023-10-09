@@ -33,6 +33,7 @@
         android:layout_height="0dp"
         android:layout_width="match_parent"
         android:layout_weight="2"
+        android:padding="16dp"
         android:orientation="horizontal">
 
         <TextView
@@ -42,7 +43,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:fontFamily="sans-serif-light"
-            android:hint="@string/due"
+            android:hint="@string/string_due_date"
             android:minHeight="@dimen/min_height"
             android:textSize="18sp" />
 
@@ -53,7 +54,7 @@
             android:layout_margin="@dimen/big_padding"
             android:layout_weight="1"
             android:fontFamily="sans-serif-light"
-            android:hint="@string/due"
+            android:hint="@string/string_due_time"
             android:minHeight="@dimen/min_height"
             android:textSize="18sp" />
     </LinearLayout>
@@ -61,30 +62,32 @@
     <LinearLayout
         android:layout_height="0dp"
         android:layout_width="match_parent"
-        android:layout_weight="1"
+        android:layout_weight="2"
+        android:paddingHorizontal="16dp"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/btn_pick_date"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_weight="3"
             android:text="Pick date" />
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+
 
         <Button
             android:id="@+id/btn_pick_time"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_weight="3"
             android:text="Pick time" />
     </LinearLayout>
 
-    <Switch
-        android:id="@+id/recurring"
-        android:layout_height="0dp"
-        android:layout_width="match_parent"
-        android:layout_weight="2"
-        android:text="@string/recurring_task_text" />
+
+
 
     <LinearLayout
         android:layout_height="0dp"
@@ -92,28 +95,29 @@
         android:layout_weight="2"
         android:orientation="horizontal">
 
-        <Space
+        <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:paddingHorizontal="8dp"
+            android:text="@string/string_recurrence"/>
 
         <Spinner
             android:id="@+id/spinner_recurring"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:spinnerMode="dialog"
-            android:visibility="invisible"
-            tools:visibility="invisible" />
+            android:spinnerMode="dropdown"/>
 
     </LinearLayout>
 
-    <Switch
-        android:id="@+id/is_completed_edit"
-        android:layout_height="0dp"
-        android:layout_width="match_parent"
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/switch_is_completed"
         android:layout_weight="2"
-        android:text="Is this task already completed?" />
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:paddingHorizontal="8dp"
+        android:text="@string/string_is_completed" />
 
     <Button
         android:id="@+id/button_save"

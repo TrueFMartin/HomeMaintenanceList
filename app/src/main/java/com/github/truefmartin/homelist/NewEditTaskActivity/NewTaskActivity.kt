@@ -1,11 +1,9 @@
 package com.github.truefmartin.homelist.NewEditTaskActivity
 
-import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.AdapterView
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
@@ -14,31 +12,38 @@ import androidx.activity.viewModels
 import com.github.truefmartin.homelist.Model.Task
 import com.github.truefmartin.homelist.R
 import com.github.truefmartin.homelist.HomeMaintenanceList
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.switchmaterial.SwitchMaterial
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
 import java.time.LocalDateTime
-import java.util.Calendar
+import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 const val EXTRA_ID:String = "com.github.truefmartin.NewTaskActivity.EXTRA_ID"
 class NewTaskActivity : AppCompatActivity() {
 
-    private lateinit var editTaskView: EditText
-    private lateinit var editBodyView: EditText
+    private lateinit var spinnerPopupWindow: Spinner
+    private lateinit var etTaskTitle: EditText
+    private lateinit var etTaskBody: EditText
     private lateinit var tvDateView: TextView
-
     private lateinit var tvTimeView: TextView
+
     private lateinit var btnSetDate: Button
     private lateinit var btnSetTime: Button
-
     private var newDate: LocalDateTime = LocalDateTime.now()
+
     private var newTime: LocalDateTime = LocalDateTime.now()
+
+    private val formatterDate = DateTimeFormatter.ofPattern("M dd, yyyy", Locale.getDefault())
+    private val formatterTime = DateTimeFormatter.ofPattern("hh:mm a", Locale.getDefault())
+
+    private var recurringVal: RecurringState = RecurringState.NONE
 
     private lateinit var spinner: Spinner
 
-    private var recurringVal: RecurringState = RecurringState.ONCE
+    private var isComplete = false;
     private val newTaskViewModel: NewTaskViewModel by viewModels {
         NewTaskViewModelFactory((application as HomeMaintenanceList).repository,-1)
     }
@@ -46,18 +51,24 @@ class NewTaskActivity : AppCompatActivity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_task)
-        editTaskView = findViewById(R.id.edit_task_body)
+        etTaskTitle = findViewById(R.id.edit_task_title)
+        etTaskBody = findViewById(R.id.edit_task_body)
 
         val id = intent.getIntExtra(EXTRA_ID,-1)
         if(id != -1){
             newTaskViewModel.updateId(id)
         }
+
         newTaskViewModel.curTask.observe(this){
-            task->task?.let { editTaskView.setText(task.title)}
+            task->task?.let { etTaskTitle.setText(task.title)}
         }
 
         tvDateView = findViewById(R.id.text_view_date)
         tvTimeView = findViewById(R.id.text_view_time)
+
+        val time = LocalDateTime.now()
+        tvDateView.text = time.format(formatterDate)
+        tvTimeView.text = time.format(formatterTime)
 
         btnSetTime = findViewById(R.id.btn_pick_time)
         btnSetTime.setOnClickListener {
@@ -70,36 +81,22 @@ class NewTaskActivity : AppCompatActivity() {
             newFragment.show(supportFragmentManager, "datePicker")
         }
 
-        val time = Calendar.getInstance().time
-        val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
-        val currentTime = formatter.format(time)
         spinner = findViewById(R.id.spinner_recurring)
-        val r = {a: String -> setRecurring(a)}
-        RecurringSpinner(this, spinner, r)
-        // Create an ArrayAdapter using the string array and a default spinner layout.
-//        ArrayAdapter.createFromResource(
-//            this,
-//            R.array.recurring_options,
-//            android.R.layout.simple_spinner_item
-//        ).also { adapter ->
-//            // Specify the layout to use when the list of choices appears.
-//            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-//            // Apply the adapter to the spinner.
-//            spinner.adapter = adapter
-//        }
-//        spinner.onItemSelectedListener = SpinnerActivity()
+        RecurringSpinner(this, spinner) { a: String -> setRecurring(a) }
 
+        findViewById<SwitchMaterial>(R.id.switch_is_completed).setOnCheckedChangeListener {
+                _, isToggled -> setComplete(isToggled) }
         val button = findViewById<Button>(R.id.button_save)
         button.setOnClickListener {
             CoroutineScope(SupervisorJob()).launch {
                 if(id==-1) {
                     newTaskViewModel.insert(
-                        Task(null, editTaskView.text.toString(),"body",
-                            combineDateTime(),0, recurringVal))
+                        Task(null, etTaskTitle.text.toString(),etTaskBody.text.toString(),
+                            combineDateTime(), isComplete, recurringVal))
                 }else{
                     val updatedTask = newTaskViewModel.curTask.value
                     if (updatedTask != null) {
-                        updatedTask.title = editTaskView.text.toString()
+                        updatedTask.title = etTaskTitle.text.toString()
                         newTaskViewModel.update(updatedTask)
                     }
 
@@ -112,21 +109,17 @@ class NewTaskActivity : AppCompatActivity() {
     }
 
 
-    private fun setRecurring(s: String){
-        Log.d("NewTaskActivity", "setting recurring to $s")
-        recurringVal = RecurringState.valueOf(s.uppercase())
+    private fun setDate(date: LocalDateTime) {
+        newDate = date
+        val selectedDateTime = newDate.toLocalDate().format(formatterDate)
+        tvDateView.text = selectedDateTime
     }
 
-    private fun setDate(time: LocalDateTime) {
-        newDate = time
-        // TODO set date view too
-    }
     private fun setTime(time: LocalDateTime) {
-        newTime = time // FIXME prints as 6:3 for 6:03
-        val tempStr: String = newTime.hour.toString() + ":" + newTime.minute.toString()
-        tvTimeView.text = tempStr
+        newTime = time
+        val selectedDateTime = newTime.toLocalTime().format(formatterTime)
+        tvTimeView.text = selectedDateTime
     }
-
     private fun combineDateTime(): LocalDateTime {
         return LocalDateTime.of(
             newDate.year,
@@ -136,14 +129,13 @@ class NewTaskActivity : AppCompatActivity() {
             newTime.minute
         )
     }
-    class SpinnerActivity : Activity(), AdapterView.OnItemSelectedListener {
-        override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
-            // An item is selected. You can retrieve the selected item using
-            // parent.getItemAtPosition(pos).
-        }
 
-        override fun onNothingSelected(parent: AdapterView<*>) {
-            // Another interface callback.
-        }
+    private fun setRecurring(s: String){
+        Log.d("NewTaskActivity", "setting recurring to $s")
+        recurringVal = RecurringState.valueOf(s.uppercase())
+    }
+
+    private fun setComplete(isToggled: Boolean) {
+        isComplete = isToggled
     }
 }
