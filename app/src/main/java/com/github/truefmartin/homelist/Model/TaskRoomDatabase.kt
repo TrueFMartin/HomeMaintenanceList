@@ -5,16 +5,22 @@ import android.util.Log
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.github.truefmartin.homelist.NewEditTaskActivity.RecurringState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
+import java.time.ZoneOffset
+import java.time.temporal.TemporalAccessor
 
-@Database(entities = arrayOf(Word::class), version = 1, exportSchema = false)
-abstract class WordRoomDatabase : RoomDatabase() {
+@Database(entities = arrayOf(Task::class), version = 1, exportSchema = false)
+@TypeConverters(Converters::class)
+abstract class TaskRoomDatabase : RoomDatabase() {
 
-    abstract fun wordDao(): WordDao
+    abstract fun taskDao(): TaskDao
 
-    private class WordDatabaseCallback(
+    private class TaskDatabaseCallback(
         private val scope: CoroutineScope
     ) : RoomDatabase.Callback() {
 
@@ -24,20 +30,15 @@ abstract class WordRoomDatabase : RoomDatabase() {
 
             INSTANCE?.let { database ->
                 scope.launch {
-                    val wordDao = database.wordDao()
+                    val taskDao = database.taskDao()
 
                     // Delete all content here.
-                    wordDao.deleteAll()
-
+                    taskDao.deleteAll()
                     // Add sample words.
-                    var word = Word(null,"Spaghetti",1)
-                    wordDao.insert(word)
-                    word = Word(null,"Chicken",7)
-                    wordDao.insert(word)
-
-                    // TODO: Add your own words!
-                    word = Word(null,"TODO!",4)
-                    wordDao.insert(word)
+                    var task = Task(null,"Clean","Clean bathroom", LocalDateTime.now().plusDays(1), 0, RecurringState.MONTHLY)
+                    taskDao.insert(task)
+                    task = Task(null,"Fix Sink","Need hammer", LocalDateTime.now(), 0, RecurringState.ONCE)
+                    taskDao.insert(task)
                 }
             }
         }
@@ -45,21 +46,21 @@ abstract class WordRoomDatabase : RoomDatabase() {
 
     companion object {
         @Volatile
-        private var INSTANCE: WordRoomDatabase? = null
+        private var INSTANCE: TaskRoomDatabase? = null
 
         fun getDatabase(
             context: Context,
             scope: CoroutineScope
-        ): WordRoomDatabase {
+        ): TaskRoomDatabase {
             // if the INSTANCE is not null, then return it,
             // if it is, then create the database
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
-                    WordRoomDatabase::class.java,
-                    "word_database"
+                    TaskRoomDatabase::class.java,
+                    "task_database"
                 )
-                    .addCallback(WordDatabaseCallback(scope))
+                    .addCallback(TaskDatabaseCallback(scope))
                     .build()
                 INSTANCE = instance
                 // return instance

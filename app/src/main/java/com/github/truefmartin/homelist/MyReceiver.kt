@@ -4,8 +4,8 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import com.github.truefmartin.homelist.Model.Word
-import com.github.truefmartin.homelist.NewEditWordActivity.EXTRA_ID
+import com.github.truefmartin.homelist.Model.Task
+import com.github.truefmartin.homelist.NewEditTaskActivity.EXTRA_ID
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
@@ -18,8 +18,8 @@ class MyReceiver : BroadcastReceiver() {
 
         val repository = (context.applicationContext as HomeMaintenanceList).repository
         CoroutineScope(SupervisorJob()).launch {
-            val word: Word = repository.getWordNotLive(id)
-            Log.d("MyReceiver", "Word is ${word.word} with quantity ${word.quantity}")
+            val task: Task = repository.getTaskNotLive(id)
+            Log.d("MyReceiver", "Task is ${task.title} with date ${task.date}")
         }
 
     }

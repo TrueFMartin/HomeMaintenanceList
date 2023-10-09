@@ -1,10 +1,20 @@
 <resources>
     <string name="app_name">HomeMaintenanceList</string>
-    <string name="hint_word">Word...</string>
+    <string name="hint_word">Task…</string>
     <string name="button_save">Save</string>
-    <string name="empty_not_saved">Word not saved because it is empty.</string>
-    <string name="add_word">Add word</string>
-    <string name="channel_name">WordListNotificationChannel</string>
-    <string name="channel_description">Default notification channel for WordList Application</string>
+    <string name="empty_not_saved">Task not saved because it is empty.</string>
+    <string name="add_task">Add task</string>
+    <string name="channel_name">TaskListNotificationChannel</string>
+    <string name="channel_description">Default notification channel for HomeMaintenanceList Application</string>
+    <string name="empty_task_text">Enter task here</string>
+    <string name="due">Due...</string>
+    <string name="default_body_text">Fill in body...</string>
+    <string name="recurring_task_text">Is a recurring this task?</string>
 
+    <string-array name="recurring_options">
+        <item>Daily</item>
+        <item>Weekly</item>
+        <item>Monthly</item>
+        <item>Yearly</item>
+    </string-array>
 </resources>

@@ -14,15 +14,17 @@ import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.github.truefmartin.MainActivity.WordListViewModel
-import com.github.truefmartin.MainActivity.WordListViewModelFactory
+import com.github.truefmartin.MainActivity.TaskListViewModel
+import com.github.truefmartin.MainActivity.TaskListViewModelFactory
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.github.truefmartin.homelist.NewEditWordActivity.EXTRA_ID
-import com.github.truefmartin.homelist.NewEditWordActivity.NewWordActivity
+import com.github.truefmartin.homelist.NewEditTaskActivity.EXTRA_ID
+import com.github.truefmartin.homelist.NewEditTaskActivity.NewTaskActivity
 import com.github.truefmartin.homelist.R
 import com.github.truefmartin.homelist.HomeMaintenanceList
 import com.github.truefmartin.homelist.MyReceiver
 import com.github.truefmartin.homelist.NotificationUtil
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 class MainActivity : AppCompatActivity() {
 
@@ -44,12 +46,12 @@ class MainActivity : AppCompatActivity() {
             }
         }
     //This is our viewModel instance for the MainActivity class
-    private val wordListViewModel: WordListViewModel by viewModels {
-        WordListViewModelFactory((application as HomeMaintenanceList).repository)
+    private val taskListViewModel: TaskListViewModel by viewModels {
+        TaskListViewModelFactory((application as HomeMaintenanceList).repository)
     }
     //This is our ActivityResultContracts value that defines
     //the behavior of our application when the activity has finished.
-    val startNewWordActivity = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+    val startNewTaskActivity = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
             result: ActivityResult ->
         if(result.resultCode== Activity.RESULT_OK){
             //Note that all we are doing is logging that we completed
@@ -76,17 +78,17 @@ class MainActivity : AppCompatActivity() {
 
 
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerview)
-        val adapter = WordListAdapter {
+        val adapter = TaskListAdapter {
             //This is the callback function to be executed
-            //when a view in the WordListAdapter is clicked
+            //when a view in the TaskListAdapter is clicked
 
             //First we log the word
-            Log.d("MainActivity",it.word)
+            Log.d("MainActivity",it.title)
             //Then create a new intent with the ID of the word
-            val intent = Intent(this@MainActivity, NewWordActivity::class.java)
+            val intent = Intent(this@MainActivity, NewTaskActivity::class.java)
             intent.putExtra(EXTRA_ID,it.id)
             //And start the activity through the results contract
-            startNewWordActivity.launch(intent)
+            startNewTaskActivity.launch(intent)
 
             val receiverIntent = Intent(this@MainActivity, MyReceiver::class.java)
             receiverIntent.putExtra(EXTRA_ID,it.id)
@@ -98,17 +100,17 @@ class MainActivity : AppCompatActivity() {
         // Add an observer on the LiveData returned by getAlphabetizedWords.
         // The onChanged() method fires when the observed data changes and the activity is
         // in the foreground.
-        wordListViewModel.allWords.observe( this) { words ->
+        taskListViewModel.allTasks.observe( this) { words ->
             // Update the cached copy of the words in the adapter.
             words.let {
                 adapter.submitList(it)
-                if(it.size > 0) {
+                if(it.isNotEmpty()) {
                     it[0].id?.let { it1 ->
                         NotificationUtil().createClickableNotification(
                             this,
-                            it[0].word,
-                            it[0].quantity.toString(),
-                            Intent(this@MainActivity, NewWordActivity::class.java),
+                            it[0].title,
+                            it[0].date.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)),
+                            Intent(this@MainActivity, NewTaskActivity::class.java),
                             it1
                         )
                     }
@@ -119,8 +121,8 @@ class MainActivity : AppCompatActivity() {
 
         val fab = findViewById<FloatingActionButton>(R.id.fab)
         fab.setOnClickListener {
-            val intent = Intent(this@MainActivity, NewWordActivity::class.java)
-            startNewWordActivity.launch(intent)
+            val intent = Intent(this@MainActivity, NewTaskActivity::class.java)
+            startNewTaskActivity.launch(intent)
         }
     }
 }
