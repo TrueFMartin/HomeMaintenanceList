@@ -15,6 +15,6 @@ class Task(
     @ColumnInfo(name = "body") var body: String,
     @ColumnInfo(name = "date") var date: LocalDateTime,
     @ColumnInfo(name = "completed") var completed: Boolean,
-    @ColumnInfo(name = "repeated") val repeated: RecurringState
+    @ColumnInfo(name = "repeated") var repeated: RecurringState
 )
 

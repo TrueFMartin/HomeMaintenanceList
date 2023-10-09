@@ -13,7 +13,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 
 class NotificationUtil {
-    val CHANNEL_ID = "WordList Notification Channel"
+    val CHANNEL_ID = "TaskList Notification Channel"
 
     fun createNotificationChannel(context: Context) {
         // Create the NotificationChannel, but only on API 26+ because

@@ -97,6 +97,10 @@ class NewTaskActivity : AppCompatActivity() {
                     val updatedTask = newTaskViewModel.curTask.value
                     if (updatedTask != null) {
                         updatedTask.title = etTaskTitle.text.toString()
+                        updatedTask.body = etTaskBody.text.toString()
+                        updatedTask.date = combineDateTime()
+                        updatedTask.repeated = recurringVal
+                        updatedTask.completed = isComplete
                         newTaskViewModel.update(updatedTask)
                     }
 
