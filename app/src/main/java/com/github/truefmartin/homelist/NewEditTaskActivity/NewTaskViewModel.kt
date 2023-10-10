@@ -33,6 +33,15 @@ class NewTaskViewModel(private val repository: TaskRepository, private val id:In
             repository.update(task)
         }
     }
+
+    /**
+     * Launching a new coroutine to Update the data in a non-blocking way
+     */
+    suspend fun deleteTask(task: Task) {
+        coroutineScope {
+            repository.deleteTask(task)
+        }
+    }
 }
 
 class NewTaskViewModelFactory(private val repository: TaskRepository, private val id:Int) : ViewModelProvider.Factory {

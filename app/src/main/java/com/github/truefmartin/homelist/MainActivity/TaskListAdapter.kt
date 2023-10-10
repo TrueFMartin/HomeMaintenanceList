@@ -27,8 +27,8 @@ class TaskListAdapter(val taskClicked:(task:Task)->Unit): ListAdapter<Task, Task
     }
 
     class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val taskItemView: TextView = itemView.findViewById(R.id.itemText)
-        private val dateTextView: TextView = itemView.findViewById(R.id.dateText)
+        private val taskItemView: TextView = itemView.findViewById(R.id.title_text)
+        private val dateTextView: TextView = itemView.findViewById(R.id.date_text)
 
         fun bind(text: String?, date:LocalDateTime?) {
             taskItemView.text = text
@@ -48,7 +48,8 @@ class TaskListAdapter(val taskClicked:(task:Task)->Unit): ListAdapter<Task, Task
             return oldItem === newItem
         }
         override fun areContentsTheSame(oldItem: Task, newItem: Task): Boolean {
-            return oldItem.title == newItem.title
+            return (oldItem.title == newItem.title
+                    && oldItem.date == newItem.date)
         }
     }
 }

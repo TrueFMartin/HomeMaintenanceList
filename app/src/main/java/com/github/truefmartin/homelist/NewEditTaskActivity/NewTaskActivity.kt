@@ -81,35 +81,18 @@ class NewTaskActivity : AppCompatActivity() {
             newFragment.show(supportFragmentManager, "datePicker")
         }
 
+        // Pass call back function for spinner that selects if the task is recurring
         spinner = findViewById(R.id.spinner_recurring)
         RecurringSpinner(this, spinner) { a: String -> setRecurring(a) }
 
+        // Set the listener for toggling of the 'is task complete' switch
         findViewById<SwitchMaterial>(R.id.switch_is_completed).setOnCheckedChangeListener {
                 _, isToggled -> setComplete(isToggled) }
-        val button = findViewById<Button>(R.id.button_save)
-        button.setOnClickListener {
-            CoroutineScope(SupervisorJob()).launch {
-                if(id==-1) {
-                    newTaskViewModel.insert(
-                        Task(null, etTaskTitle.text.toString(),etTaskBody.text.toString(),
-                            combineDateTime(), isComplete, recurringVal))
-                }else{
-                    val updatedTask = newTaskViewModel.curTask.value
-                    if (updatedTask != null) {
-                        updatedTask.title = etTaskTitle.text.toString()
-                        updatedTask.body = etTaskBody.text.toString()
-                        updatedTask.date = combineDateTime()
-                        updatedTask.repeated = recurringVal
-                        updatedTask.completed = isComplete
-                        newTaskViewModel.update(updatedTask)
-                    }
+        // Set the on click function when user hits 'save'. Add or Update task in DB
+        findViewById<Button>(R.id.button_save).setOnClickListener { onSaveClick(id) }
 
-                }
-            }
+        findViewById<Button>(R.id.button_delete).setOnClickListener { ConfirmDelete{ _ -> deleteTask(id) } }
 
-            setResult(RESULT_OK)
-            finish()
-        }
     }
 
 
@@ -141,5 +124,43 @@ class NewTaskActivity : AppCompatActivity() {
 
     private fun setComplete(isToggled: Boolean) {
         isComplete = isToggled
+    }
+
+    private fun onSaveClick(id: Int) {
+        CoroutineScope(SupervisorJob()).launch {
+            if(id==-1) {
+                newTaskViewModel.insert(
+                    Task(null, etTaskTitle.text.toString(),etTaskBody.text.toString(),
+                        combineDateTime(), isComplete, recurringVal))
+            }else{
+                val updatedTask = newTaskViewModel.curTask.value
+                if (updatedTask != null) {
+                    updatedTask.title = etTaskTitle.text.toString()
+                    updatedTask.body = etTaskBody.text.toString()
+                    updatedTask.date = combineDateTime()
+                    updatedTask.repeated = recurringVal
+                    updatedTask.completed = isComplete
+                    newTaskViewModel.update(updatedTask)
+                }
+
+            }
+        }
+
+        setResult(RESULT_OK)
+        finish()
+    }
+
+    private fun deleteTask(id: Int) {
+        if (id == -1) {
+            setResult(RESULT_CANCELED)
+            finish()
+        } else {
+            CoroutineScope(SupervisorJob()).launch {
+                newTaskViewModel.curTask.value?.let { newTaskViewModel.deleteTask(it) }
+            }
+            setResult(RESULT_OK)
+            finish()
+        }
+
     }
 }

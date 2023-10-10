@@ -1,6 +1,7 @@
 package com.github.truefmartin.homelist.Model
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -33,4 +34,9 @@ interface TaskDao {
     //Update a single task
     @Update
     suspend fun update(task: Task):Int
+
+    // Delete a single task
+
+    @Delete
+    suspend fun deleteTask(task: Task)
 }

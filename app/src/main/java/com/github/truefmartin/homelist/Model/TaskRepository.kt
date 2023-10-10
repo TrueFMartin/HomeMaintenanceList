@@ -31,7 +31,6 @@ class TaskRepository(private val taskDao: TaskDao) {
         //a 5 second sleep call here
         //If you don't run this in a scope that is still active
         //Then the call won't complete
-        Thread.sleep(5000)
         taskDao.insert(task)
     }
 
@@ -42,5 +41,11 @@ class TaskRepository(private val taskDao: TaskDao) {
     @WorkerThread
     suspend fun update(task: Task) {
         taskDao.update(task)
+    }
+
+    @Suppress("RedundantSuspendModifier")
+    @WorkerThread
+    suspend fun deleteTask(task: Task) {
+        taskDao.deleteTask(task)
     }
 }

@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
     }
     //This is our ActivityResultContracts value that defines
     //the behavior of our application when the activity has finished.
-    val startNewTaskActivity = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+    private val startNewTaskActivity = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
             result: ActivityResult ->
         if(result.resultCode== Activity.RESULT_OK){
             //Note that all we are doing is logging that we completed
@@ -109,7 +109,7 @@ class MainActivity : AppCompatActivity() {
                         NotificationUtil().createClickableNotification(
                             this,
                             it[0].title,
-                            it[0].date.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)),
+                            it[0].date.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)),
                             Intent(this@MainActivity, NewTaskActivity::class.java),
                             it1
                         )

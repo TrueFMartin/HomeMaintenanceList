@@ -13,6 +13,9 @@
     <string name="recurring_task_text">Is a recurring this task?</string>
     <string name="string_is_completed">Is this task already completed?</string>
     <string name="string_recurrence">Recurrence:</string>
+    <string name="string_delete">Delete</string>
+    <string name="string_pick_date">Pick date</string>
+    <string name="string_pick_time">Pick time</string>
 
     <string-array name="recurring_options">
         <item>None</item>

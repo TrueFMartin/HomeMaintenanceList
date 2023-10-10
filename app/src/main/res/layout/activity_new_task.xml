@@ -1,28 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-
-        />
-
-    <EditText
-        android:id="@+id/edit_task_title"
-        android:layout_height="0dp"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_margin="@dimen/big_padding"
-        android:layout_weight="2"
-        android:fontFamily="sans-serif-light"
-        android:hint="@string/hint_word"
-        android:inputType="textAutoComplete"
-        android:minHeight="@dimen/min_height"
-        android:textSize="18sp" />
+        android:layout_height="0dp"
+        android:layout_weight="2">
+
+        <EditText
+            android:id="@+id/edit_task_title"
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_margin="@dimen/big_padding"
+            android:layout_weight="2"
+            android:fontFamily="sans-serif-light"
+            android:hint="@string/hint_word"
+            android:inputType="textAutoComplete"
+            android:minHeight="@dimen/min_height"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/button_delete"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginVertical="16dp"
+            android:background="@color/colorAccent"
+            android:textColor="@color/buttonLabel"
+            app:backgroundTint="@null"
+            android:text="@string/string_delete"/>
+
+    </LinearLayout>
+
 
     <EditText
         android:id="@+id/edit_task_body"
@@ -78,7 +90,9 @@
             android:layout_height="match_parent"
             android:layout_width="0dp"
             android:layout_weight="3"
-            android:text="Pick date" />
+            android:textColor="@color/buttonLabel"
+            android:background="@color/colorPrimary"
+            android:text="@string/string_pick_date" />
         <Space
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -90,7 +104,9 @@
             android:layout_height="match_parent"
             android:layout_width="0dp"
             android:layout_weight="3"
-            android:text="Pick time" />
+            android:background="@color/colorPrimary"
+            android:textColor="@color/buttonLabel"
+            android:text="@string/string_pick_time" />
     </LinearLayout>
 
 
@@ -106,6 +122,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:textAlignment="center"
+            android:textSize="20dp"
             android:paddingHorizontal="8dp"
             android:text="@string/string_recurrence"/>
 
@@ -113,7 +131,7 @@
             android:id="@+id/spinner_recurring"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="1.5"
             android:spinnerMode="dropdown"/>
 
     </LinearLayout>
@@ -132,7 +150,7 @@
         android:layout_width="match_parent"
         android:layout_margin="@dimen/big_padding"
         android:layout_weight="1"
-        android:background="@color/colorPrimary"
+        android:background="@color/colorPrimaryDark"
         android:text="@string/button_save"
         android:textColor="@color/buttonLabel" />
 
